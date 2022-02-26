@@ -1,6 +1,6 @@
 # multi-agent-rearrangement-planning-for-robotic-chess
 
-Milestone 1: Set up chess environment with multiple robots
+Milestone 1: Set up chess environment with multiple robots \n
 Milestone 2: Single robot navigation with RRT* and MPC
 Milestone 3: RL based multi-robot rearrangement planning
 
