@@ -8,7 +8,6 @@ class FuncMinGTEnv():
         self.a_size = input_size
         self.func = batched_func
         self.state = None
-        #TODO add vector from RRT* in here
         self.reset_state(batch_size)
 
     def reset_state(self, batch_size):
