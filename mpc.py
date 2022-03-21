@@ -11,13 +11,15 @@ from torch import nn, optim
 
 
 class CEM():  # jit.ScriptModule):
-    def __init__(self, planning_horizon, opt_iters, samples, top_samples, env, device):
+    def __init__(self, planning_horizon, opt_iters, samples, top_samples, env, device, rob, path):
         super().__init__()
         self.set_env(env)
-        self.H = planning_horizon
+        self.H = planning_horizon 
         self.opt_iters = opt_iters
         self.K, self.top_K = samples, top_samples
         self.device = device
+        self.rob = rob
+        self.path = path
 
     def set_env(self, env):
         self.env = env
