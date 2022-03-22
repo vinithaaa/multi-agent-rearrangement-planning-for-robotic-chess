@@ -67,26 +67,27 @@ class CEM():  # jit.ScriptModule):
             return a_mu.squeeze(dim=2)[0]
 
 if __name__ == "__main__":
-    from test_energy import get_test_energy2d_env
-    B = 1
-    K = 100
-    tK = 10
-    t_env = get_test_energy2d_env(B*K)
-    H = 1
-    planner = CEM(H, 10, K, tK, t_env, device=torch.device('cpu'))
-    action = planner.forward(B)
-    action = action.cpu().numpy()
+    # from test_energy import get_test_energy2d_env
+    # B = 1
+    # K = 100
+    # tK = 10
+    # t_env = get_test_energy2d_env(B*K)
+    # H = 1
+    # planner = CEM(H, 10, K, tK, t_env, device=torch.device('cpu'))
+    # action = planner.forward(B)
+    # action = action.cpu().numpy()
 
-    import matplotlib.pyplot as plt
-    N = 30
-    x = torch.linspace(-1,1,N)
-    y = torch.linspace(-1,1,N)
-    X, Y = torch.meshgrid(x,y)
-    actions_grid = torch.stack((X,Y),dim=-1)
-    # print(actions_grid)
-    energies = t_env.func(actions_grid.reshape(-1,2))
+    # import matplotlib.pyplot as plt
+    # N = 30
+    # x = torch.linspace(-1,1,N)
+    # y = torch.linspace(-1,1,N)
+    # X, Y = torch.meshgrid(x,y)
+    # actions_grid = torch.stack((X,Y),dim=-1)
+    # # print(actions_grid)
+    # energies = t_env.func(actions_grid.reshape(-1,2))
 
-    plt.pcolormesh(X.numpy(), Y.numpy(), -energies.reshape(N,N).numpy(), cmap="coolwarm")
-    plt.contour(X.numpy(), Y.numpy(), -energies.reshape(N,N).numpy(), cmap="seismic")
-    plt.scatter(action[:, 0], action[:, 1])
-    plt.show()
+    # plt.pcolormesh(X.numpy(), Y.numpy(), -energies.reshape(N,N).numpy(), cmap="coolwarm")
+    # plt.contour(X.numpy(), Y.numpy(), -energies.reshape(N,N).numpy(), cmap="seismic")
+    # plt.scatter(action[:, 0], action[:, 1])
+    # plt.show()
+    pass
