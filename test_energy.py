@@ -7,6 +7,27 @@ import torch.nn as nn
 import pybullet
 import math
 
+def get_test_energy2d_env(batch_size, rob, path):
+    return FuncMinGTEnv(batch_size, 2, test_energy2d, rob=rob, path=path)
+
+def test_energy2d(action_batch):
+    assert action_batch.dim() == 2
+    assert action_batch.size()[1] == 2
+
+    opt_point = torch.tensor([[1.0, 1.0]],
+                    requires_grad=False,
+                    device=action_batch.device)
+
+    return ((action_batch-opt_point)**2).sum(-1)
+
+def get_test_energy(opt_point):
+    def test_energy(query_batch):
+        assert query_batch.dim() == 2
+        assert query_batch.size(1) == opt_point.size(-1)
+
+        return ((query_batch-opt_point)**2).sum(-1)
+    return test_energy
+
 
 class FuncMinGTEnv():
     def __init__(self, batch_size, input_size, batched_func, rob, path):
