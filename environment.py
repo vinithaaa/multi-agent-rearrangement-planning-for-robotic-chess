@@ -74,26 +74,37 @@ class Environment():
         observations = []
         rewards = []
         for agent in self.agents:
-            observations.append(agent.getPos())
+            observations.append(self.observe(agent))
             agentReward = agent.reward()
             for other in self.agents:
                 if agent != other and self.collision(agent, other):
-                     agentReward -= 1  
+                     agentReward -= 5  
             rewards.append(agentReward)
         
         done = [self.done()] * len(rewards)
 
         return observations, rewards, done
 
-    def collision(firstAgent, secondAgent):
-        return math.dist([firstAgent.getPos()[0], firstAgent.getPos()[1]],[secondAgent.getPos[0], secondAgent.getPos[1]]) <= 0.25
+    def collision(self, firstAgent, secondAgent):
+        firstXY = (firstAgent.getPos()[0][0], firstAgent.getPos()[0][1])
+        secondXY = (secondAgent.getPos()[0][0], secondAgent.getPos()[0][1])
+        return math.sqrt(sum((px - qx) ** 2.0 for px, qx in zip(firstXY, secondXY))) <= 0.25
+        #return math.dist([firstAgent.getPos()[0], firstAgent.getPos()[1]],[secondAgent.getPos[0], secondAgent.getPos[1]]) <= 0.25
         
+
+    def observe(self, agent):
+        position = agent.getPos()[0]
+        posNP = np.array([[position[0]], [position[1]]])
+        return np.concatenate(posNP)
+
+
+
     def reset(self):
         obs = []
         for agent in self.agents:
             agent.reset()
-            obs.append(agent.getPos())
-        return np.array(obs)
+            obs.append(self.observe(agent))
+        return obs
     
     
 

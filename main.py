@@ -93,5 +93,7 @@ with U.single_threaded_session():
         for agent in trainers:
             loss = agent.update(trainers, train_step)
 
-    
+
+        if len(episode_rewards) > arglist['num_episodes']:
+            break
 

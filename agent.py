@@ -30,7 +30,7 @@ class Agent:
         angle = math.atan(action[1]/action[0])
 
         quarter = pybullet.getQuaternionFromEuler([0,0,angle])
-        current_pos = self.getPos()
+        current_pos = self.getPos()[0]
         pybullet.resetBasePositionAndOrientation(self.obj, [current_pos[0], current_pos[1], current_pos[2]], quarter)
         pybullet.resetBaseVelocity(self.obj, [action[0], action[1], 0])
         
@@ -40,11 +40,13 @@ class Agent:
         
     
     def reward(self):
-        self.current_pos = self.getPos()
-        return math.dist((self.current_pos[0], self.current_pos[1], self.current_pos[2]), self.target_pos)
+        self.current_pos = self.getPos()[0]
+        current = (self.current_pos[0], self.current_pos[1], self.current_pos[2])
+        return -1 * math.sqrt(sum((px - qx) ** 2.0 for px, qx in zip(current, self.target_pos)))
+        #return math.dist((self.current_pos[0], self.current_pos[1], self.current_pos[2]), self.target_pos)
     
     def done(self):
-        return self.reward() <= 0.1
+        return self.reward() >= -0.1
 
 
     def reset(self):
