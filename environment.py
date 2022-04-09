@@ -3,18 +3,13 @@ from gym import spaces
 import numpy as np
 from agent import Agent
 import pybullet
-from pybullet import pybullet_data
+import pybullet_data
 import time
 import math
 
 class Environment():
 
     def __init__(self):
-        self.action_space = spaces.Box(low=0.0, high=10.0, shape=(2,), dtype=np.float32)
-        self.observation_space = spaces.Box(low=np.array([0.0,-0.5]), high=np.array([2.0,1.5]), dtype=np.float32)
-        self.agents = self.createAgents()
-        self.n = len(self.agents)
-
         # Initializing pybullet
         physicsClient = pybullet.connect(pybullet.GUI)
         pybullet.setAdditionalSearchPath(pybullet_data.getDataPath())
@@ -38,7 +33,12 @@ class Environment():
             farVal=3.1)
 
         width, height, rgbImg, depthImg, segImg = pybullet.getCameraImage(width = 224, height = 224, viewMatrix=viewMatrix, projectionMatrix = projectionMatrix)
-
+        self.agents = self.createAgents()
+        self.n = len(self.agents)
+        actionBox = spaces.Box(low=0.0, high=10.0, shape=(2,), dtype=np.float32)
+        obsBox = spaces.Box(low=np.array([0.0,-0.5]), high=np.array([2.0,1.5]), dtype=np.float32)
+        self.action_space = [actionBox] * self.n
+        self.observation_space = [obsBox] * self.n
         pybullet.setRealTimeSimulation(1)
 
     def createAgents(self):
@@ -93,7 +93,7 @@ class Environment():
         for agent in self.agents:
             agent.reset()
             obs.append(agent.getPos())
-        return obs
+        return np.array(obs)
     
     
 

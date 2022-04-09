@@ -1,7 +1,9 @@
 import collections
 import numpy as np
 import os
-import tensorflow as tf
+#import tensorflow as tf
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
 
 def sum(x, axis=None, keepdims=False):
     return tf.reduce_sum(x, axis=None if axis is None else [axis], keep_dims = keepdims)
@@ -136,6 +138,12 @@ def minimize_and_clip(optimizer, objective, var_list, clip_val=10):
     `var_list` while ensure the norm of the gradients for each
     variable is clipped to `clip_val`
     """    
+    # print("printing a thing")
+    # print('\n', optimizer, type(optimizer), objective, type(objective), var_list, clip_val, '\n')
+    #  var_lit is empty so there's nothign to optimize right, dyk what exaclty is supposed to be in var_list?
+    
+    # What calls this fxn? p_train in maddpg line 62
+    # Ok
     if clip_val is None:
         return optimizer.minimize(objective, var_list=var_list)
     else:
@@ -152,6 +160,10 @@ def minimize_and_clip(optimizer, objective, var_list, clip_val=10):
 
 def get_session():
     """Returns recently made Tensorflow session"""
+    
+    # I did google and see that this only works
+    # if we do with name_of_session: then this
+    # But then why did this work for them
     return tf.get_default_session()
 
 
@@ -198,6 +210,15 @@ def scope_vars(scope, trainable_only=False):
     vars: [tf.Variable]
         list of variables in `scope`.
     """
+
+
+    #
+
+
+    # Try now? 
+    # it stayed for a little longer than last time but the robots all tilted and then the semaphore destroyed?
+    # oh wait i didn't scroll down
+
     return tf.get_collection(
         tf.GraphKeys.TRAINABLE_VARIABLES if trainable_only else tf.GraphKeys.GLOBAL_VARIABLES,
         scope=scope if isinstance(scope, str) else scope.name
@@ -315,6 +336,7 @@ class _Function(object):
         # Update feed dict with givens.
         for inpt in self.givens:
             feed_dict[inpt] = feed_dict.get(inpt, self.givens[inpt])
+        # Got it fixed try now
         results = get_session().run(self.outputs_update, feed_dict=feed_dict)[:-1]
         if self.check_nan:
             if any(np.isnan(r).any() for r in results):

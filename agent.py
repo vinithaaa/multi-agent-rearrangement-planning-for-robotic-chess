@@ -11,6 +11,8 @@ class Agent:
         self.target_pos = target_pos
         self.color = color
         self.obj = None
+        self.create()
+
         
         
     def create(self):
@@ -46,5 +48,5 @@ class Agent:
 
 
     def reset(self):
-        pybullet.resetBasePositionAndOrientation(self.obj, [self.initial_pos[0], self.initial_pos[1], self.initial_pos[2]])
+        pybullet.resetBasePositionAndOrientation(self.obj, [self.initial_pos[0], self.initial_pos[1], self.initial_pos[2]], pybullet.getQuaternionFromEuler([0,0,0]))
         

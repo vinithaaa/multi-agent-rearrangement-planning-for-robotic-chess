@@ -2,7 +2,9 @@
 
 import numpy as np
 import random
-import tensorflow as tf
+#import tensorflow as tf
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
 import tf_util as U
 
 from distributions import make_pdtype
@@ -39,6 +41,7 @@ def p_train(make_obs_ph_n, act_space_n, p_index, p_func, q_func, optimizer, grad
         p_input = obs_ph_n[p_index]
 
         p = p_func(p_input, int(act_pdtype_n[p_index].param_shape()[0]), scope="p_func", num_units=num_units)
+        # Which is defined here
         p_func_vars = U.scope_vars(U.absolute_scope_name("p_func"))
 
         # wrap parameters in distribution
@@ -57,6 +60,8 @@ def p_train(make_obs_ph_n, act_space_n, p_index, p_func, q_func, optimizer, grad
 
         loss = pg_loss + p_reg * 1e-3
 
+        # So I see
+        # So p_func_vars is empty
         optimize_expr = U.minimize_and_clip(optimizer, loss, p_func_vars, grad_norm_clipping)
 
         # Create callable functions
@@ -88,6 +93,9 @@ def q_train(make_obs_ph_n, act_space_n, q_index, q_func, optimizer, grad_norm_cl
         if local_q_func:
             q_input = tf.concat([obs_ph_n[q_index], act_ph_n[q_index]], 1)
         q = q_func(q_input, 1, scope="q_func", num_units=num_units)[:,0]
+        
+        # type(q)
+        # q = q_func(q_input, 1, scope="q_func", num_units=num_units)[:,0]
         q_func_vars = U.scope_vars(U.absolute_scope_name("q_func"))
 
         q_loss = tf.reduce_mean(tf.square(q - target_ph))
