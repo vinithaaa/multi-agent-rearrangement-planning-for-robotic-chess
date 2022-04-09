@@ -3,11 +3,11 @@
 import numpy as np
 import random
 import tensorflow as tf
-import maddpg.common.tf_util as U
+import tf_util as U
 
-from maddpg.common.distributions import make_pdtype
-from maddpg import AgentTrainer
-from maddpg.trainer.replay_buffer import ReplayBuffer
+from distributions import make_pdtype
+#from maddpg import AgentTrainer
+from replay_buffer import ReplayBuffer
 
 
 def discount_with_dones(rewards, dones, gamma):
@@ -111,7 +111,9 @@ def q_train(make_obs_ph_n, act_space_n, q_index, q_func, optimizer, grad_norm_cl
 
         return train, update_target_q, {'q_values': q_values, 'target_q_values': target_q_values}
 
-class MADDPGAgentTrainer(AgentTrainer):
+# Had AgentTrainer as argument. Removed because
+# it is not implemented
+class MADDPGAgentTrainer():
     def __init__(self, name, model, obs_shape_n, act_space_n, agent_index, args, local_q_func=False):
         self.name = name
         self.n = len(obs_shape_n)
@@ -128,10 +130,10 @@ class MADDPGAgentTrainer(AgentTrainer):
             act_space_n=act_space_n,
             q_index=agent_index,
             q_func=model,
-            optimizer=tf.train.AdamOptimizer(learning_rate=args.lr),
+            optimizer=tf.train.AdamOptimizer(learning_rate=args['lr']),
             grad_norm_clipping=0.5,
             local_q_func=local_q_func,
-            num_units=args.num_units
+            num_units=args['num_units']
         )
         self.act, self.p_train, self.p_update, self.p_debug = p_train(
             scope=self.name,
@@ -140,14 +142,14 @@ class MADDPGAgentTrainer(AgentTrainer):
             p_index=agent_index,
             p_func=model,
             q_func=model,
-            optimizer=tf.train.AdamOptimizer(learning_rate=args.lr),
+            optimizer=tf.train.AdamOptimizer(learning_rate=args['lr']),
             grad_norm_clipping=0.5,
             local_q_func=local_q_func,
-            num_units=args.num_units
+            num_units=args['num_units']
         )
         # Create experience buffer
         self.replay_buffer = ReplayBuffer(1e6)
-        self.max_replay_buffer_len = args.batch_size * args.max_episode_len
+        self.max_replay_buffer_len = args['batch_size'] * args['max_episode_len']
         self.replay_sample_index = None
 
     def action(self, obs):
@@ -166,7 +168,7 @@ class MADDPGAgentTrainer(AgentTrainer):
         if not t % 100 == 0:  # only update every 100 steps
             return
 
-        self.replay_sample_index = self.replay_buffer.make_index(self.args.batch_size)
+        self.replay_sample_index = self.replay_buffer.make_index(self.args['batch_size'])
         # collect replay sample from all agents
         obs_n = []
         obs_next_n = []
@@ -185,7 +187,7 @@ class MADDPGAgentTrainer(AgentTrainer):
         for i in range(num_sample):
             target_act_next_n = [agents[i].p_debug['target_act'](obs_next_n[i]) for i in range(self.n)]
             target_q_next = self.q_debug['target_q_values'](*(obs_next_n + target_act_next_n))
-            target_q += rew + self.args.gamma * (1.0 - done) * target_q_next
+            target_q += rew + self.args['gamma'] * (1.0 - done) * target_q_next
         target_q /= num_sample
         q_loss = self.q_train(*(obs_n + act_n + [target_q]))
 
