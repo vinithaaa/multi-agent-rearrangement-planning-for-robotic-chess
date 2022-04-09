@@ -13,6 +13,8 @@ class Environment():
         self.action_space = spaces.Box(low=0.0, high=10.0, shape=(2,), dtype=np.float32)
         self.observation_space = spaces.Box(low=np.array([0.0,-0.5]), high=np.array([2.0,1.5]), dtype=np.float32)
         self.agents = self.createAgents()
+        self.n = len(self.agents)
+
         # Initializing pybullet
         physicsClient = pybullet.connect(pybullet.GUI)
         pybullet.setAdditionalSearchPath(pybullet_data.getDataPath())
@@ -87,8 +89,11 @@ class Environment():
         return math.dist([firstAgent.getPos()[0], firstAgent.getPos()[1]],[secondAgent.getPos[0], secondAgent.getPos[1]]) <= 0.25
         
     def reset(self):
+        obs = []
         for agent in self.agents:
             agent.reset()
+            obs.append(agent.getPos())
+        return obs
     
     
 
