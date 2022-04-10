@@ -1,3 +1,4 @@
+import matplotlib
 import pybullet
 import gym
 import numpy as np
@@ -40,7 +41,7 @@ def mlp_model(input, num_outputs, scope, reuse=False, num_units=64, rnn_cell=Non
 model = mlp_model
 
 
-arglist = {'max_episode_len': 100, 'num_episodes': 60000, 'num_adversaries': 0, 'good_policy': 'maddpg', 'lr': 1e-2, 'gamma': 0.95, 'batch_size': 1024, 'num_units': 64, 'collision_penalty': 0.25, 'action_duration' : 5}
+arglist = {'max_episode_len': 100, 'num_episodes': 60000, 'num_adversaries': 0, 'good_policy': 'maddpg', 'lr': 1e-2, 'gamma': 0.95, 'batch_size': 1024, 'num_units': 64, 'collision_penalty': 0.25, 'action_duration' : 8}
 
 
 with U.single_threaded_session():  
@@ -66,9 +67,14 @@ with U.single_threaded_session():
     t_start = time.time()
     t_curr = time.time()
     current_episode = 0
+<<<<<<< HEAD
     best_actions = []
     total_actions = []
     best_reward = float('-inf')
+=======
+    f = open('printOutput.txt', 'a')
+
+>>>>>>> a4e644ba11fde60ae0ce3a44830acf7deea07cb1
     while True:
         action_n = [agent.action(obs) for agent, obs in zip(trainers, obs_n)]
         total_actions.append(action_n)
@@ -89,20 +95,31 @@ with U.single_threaded_session():
                 print("Completed task")
             obs_n = env.reset()
             episode_step = 0
+<<<<<<< HEAD
             print(episode_rewards[-1])
             if (episode_rewards[-1] > best_reward):
                 best_actions = total_actions
                 best_reward = episode_rewards[-1]
 
             total_actions = []
+=======
+            # print(episode_rewards[-1])
+>>>>>>> a4e644ba11fde60ae0ce3a44830acf7deea07cb1
             episode_rewards.append(0)
             for a in agent_rewards:
                 a.append(0)
             agent_info.append([[]])
             current_episode += 1
-            if current_episode % 5 == 0:
+            if current_episode % 100 == 0:
                 t_curr = time.time() - t_curr
-                print("current episode", current_episode, "time for this set of 5 episodes", t_curr)
+                print("current episode:", current_episode, "time:", t_curr, "rewards", episode_rewards[len(episode_rewards) - 2],file=f)
+                if current_episode % 10000 == 0:
+                    plt.plot(episode_rewards)
+                    plt.title('total rewards')
+                    plt.ylabel('rewards')
+                    plt.xlabel('episodes')
+                    plt.savefig('rewardPlot' + str(current_episode) + '.png')
+                    plt.cla()
 
 
         train_step += 1
@@ -112,10 +129,16 @@ with U.single_threaded_session():
             agent.preupdate()
         for agent in trainers:
             loss = agent.update(trainers, train_step)
-
         
 
         if len(episode_rewards) > arglist['num_episodes']:
+            plt.plot(episode_rewards)
+            plt.title('total rewards')
+            plt.ylabel('rewards')
+            plt.xlabel('episodes')
+            plt.savefig('finalRewardPlot.png')
+            print('closed')
+            f.close()
             break
 
 
