@@ -38,11 +38,11 @@ def mlp_model(input, num_outputs, scope, reuse=False, num_units=64, rnn_cell=Non
 model = mlp_model
 
 
-arglist = {'max_episode_len': 25, 'num_episodes': 60000, 'num_adversaries': 0, 'good_policy': 'maddpg', 'lr': 1e-2, 'gamma': 0.95, 'batch_size': 1024, 'num_units': 64}
+arglist = {'max_episode_len': 20, 'num_episodes': 60000, 'num_adversaries': 0, 'good_policy': 'maddpg', 'lr': 1e-2, 'gamma': 0.95, 'batch_size': 1024, 'num_units': 32, 'collision_penalty': 0.25}
 
 
 with U.single_threaded_session():  
-    env = Environment()
+    env = Environment(arglist['collision_penalty'])
     agents = env.agents
     trainer = MADDPGAgentTrainer
     trainers = []
@@ -74,6 +74,7 @@ with U.single_threaded_session():
         obs_n = new_obs_n
 
         for i, rew in enumerate(rew_n):
+            print(rew)
             episode_rewards[-1] += rew
             agent_rewards[i][-1] += rew
 

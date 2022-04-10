@@ -9,7 +9,9 @@ import math
 
 class Environment():
 
-    def __init__(self):
+    def __init__(self, collisionPenalty):
+        self.collisionPenalty = collisionPenalty
+
         # Initializing pybullet
         physicsClient = pybullet.connect(pybullet.GUI)
         pybullet.setAdditionalSearchPath(pybullet_data.getDataPath())
@@ -52,7 +54,7 @@ class Environment():
         return [player, obs1, obs2, obs3, target]
     
 
-    def done(self):
+    def doneGlobal(self):
         for agent in self.agents:
             if agent.done() == False:
                 return False
@@ -73,22 +75,24 @@ class Environment():
 
         observations = []
         rewards = []
+        done = []
         for agent in self.agents:
+            done.append(agent.done())
             observations.append(self.observe(agent))
             agentReward = agent.reward()
             for other in self.agents:
                 if agent != other and self.collision(agent, other):
-                     agentReward -= 5  
+                     agentReward -= self.collisionPenalty  
             rewards.append(agentReward)
         
-        done = [self.done()] * len(rewards)
+        #done = [self.doneGlobal()] * len(rewards)
 
         return observations, rewards, done
 
     def collision(self, firstAgent, secondAgent):
         firstXY = (firstAgent.getPos()[0][0], firstAgent.getPos()[0][1])
         secondXY = (secondAgent.getPos()[0][0], secondAgent.getPos()[0][1])
-        return math.sqrt(sum((px - qx) ** 2.0 for px, qx in zip(firstXY, secondXY))) <= 0.25
+        return math.sqrt(sum((px - qx) ** 2.0 for px, qx in zip(firstXY, secondXY))) <= 0.2
         #return math.dist([firstAgent.getPos()[0], firstAgent.getPos()[1]],[secondAgent.getPos[0], secondAgent.getPos[1]]) <= 0.25
         
 
