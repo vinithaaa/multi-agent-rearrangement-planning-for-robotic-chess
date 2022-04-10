@@ -9,8 +9,9 @@ import math
 
 class Environment():
 
-    def __init__(self, collisionPenalty):
+    def __init__(self, collisionPenalty, actionDuration):
         self.collisionPenalty = collisionPenalty
+        self.actionDuration = actionDuration
 
         # Initializing pybullet
         physicsClient = pybullet.connect(pybullet.GUI)
@@ -63,7 +64,7 @@ class Environment():
 
             
     def step(self, actions):
-        for x in range(10):
+        for x in range(self.actionDuration):
             pybullet.stepSimulation()
             time.sleep(1./240.)
             for i, agent in enumerate(self.agents):
