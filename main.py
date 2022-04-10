@@ -41,7 +41,7 @@ def mlp_model(input, num_outputs, scope, reuse=False, num_units=64, rnn_cell=Non
 model = mlp_model
 
 
-arglist = {'max_episode_len': 100, 'num_episodes': 60000, 'num_adversaries': 0, 'good_policy': 'maddpg', 'lr': 1e-2, 'gamma': 0.95, 'batch_size': 1024, 'num_units': 64, 'collision_penalty': 0.25, 'action_duration' : 8}
+arglist = {'max_episode_len': 100, 'num_episodes': 60000, 'num_adversaries': 0, 'good_policy': 'maddpg', 'lr': 1e-2, 'gamma': 0.95, 'batch_size': 1024, 'num_units': 64, 'collision_penalty': 0.5, 'action_duration' : 5}
 
 
 with U.single_threaded_session():  
@@ -71,6 +71,7 @@ with U.single_threaded_session():
     total_actions = []
     best_reward = float('-inf')
     f = open('printOutput.txt', 'a')
+    converges = 0
 
     while True:
         action_n = [agent.action(obs) for agent, obs in zip(trainers, obs_n)]
@@ -89,7 +90,10 @@ with U.single_threaded_session():
 
         if done or terminal:
             if done:
+                converges += 1
                 print("Completed task")
+            else:
+                converges = 0
             obs_n = env.reset()
             episode_step = 0
             print(episode_rewards[-1])
@@ -106,13 +110,22 @@ with U.single_threaded_session():
             if current_episode % 100 == 0:
                 t_curr = time.time() - t_curr
                 print("current episode:", current_episode, "time:", t_curr, "rewards", episode_rewards[len(episode_rewards) - 2],file=f)
-                if current_episode % 10000 == 0:
-                    plt.plot(episode_rewards)
-                    plt.title('total rewards')
-                    plt.ylabel('rewards')
-                    plt.xlabel('episodes')
-                    plt.savefig('rewardPlot' + str(current_episode) + '.png')
-                    plt.cla()
+                plt.plot(episode_rewards)
+                plt.title('total rewards')
+                plt.ylabel('rewards')
+                plt.xlabel('episodes')
+                plt.savefig('rewardPlot' + str(current_episode) + '.png')
+                plt.cla()
+
+
+        if converges == 10:
+            plt.plot(episode_rewards)
+            plt.title('total rewards final')
+            plt.ylabel('rewards')
+            plt.xlabel('episodes')
+            plt.savefig('rewardPlot' + str(current_episode) + '.png')
+            plt.cla()
+            break
 
 
         train_step += 1
