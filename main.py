@@ -67,14 +67,11 @@ with U.single_threaded_session():
     t_start = time.time()
     t_curr = time.time()
     current_episode = 0
-<<<<<<< HEAD
     best_actions = []
     total_actions = []
     best_reward = float('-inf')
-=======
     f = open('printOutput.txt', 'a')
 
->>>>>>> a4e644ba11fde60ae0ce3a44830acf7deea07cb1
     while True:
         action_n = [agent.action(obs) for agent, obs in zip(trainers, obs_n)]
         total_actions.append(action_n)
@@ -95,16 +92,12 @@ with U.single_threaded_session():
                 print("Completed task")
             obs_n = env.reset()
             episode_step = 0
-<<<<<<< HEAD
             print(episode_rewards[-1])
             if (episode_rewards[-1] > best_reward):
                 best_actions = total_actions
                 best_reward = episode_rewards[-1]
 
             total_actions = []
-=======
-            # print(episode_rewards[-1])
->>>>>>> a4e644ba11fde60ae0ce3a44830acf7deea07cb1
             episode_rewards.append(0)
             for a in agent_rewards:
                 a.append(0)
