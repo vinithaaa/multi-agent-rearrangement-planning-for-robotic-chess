@@ -62,7 +62,8 @@ with U.single_threaded_session():
     episode_step = 0
     train_step = 0
     t_start = time.time()
-
+    t_curr = time.time()
+    current_episode = 0
     while True:
         action_n = [agent.action(obs) for agent, obs in zip(trainers, obs_n)]
         new_obs_n, rew_n, done_n = env.step(action_n)
@@ -85,6 +86,11 @@ with U.single_threaded_session():
             for a in agent_rewards:
                 a.append(0)
             agent_info.append([[]])
+            current_episode += 1
+            if current_episode % 5 == 0:
+                t_curr = time.time() - t_curr
+                print("current episode", current_episode, "time for this set of 5 episodes", t_curr)
+
 
         train_step += 1
 
@@ -94,6 +100,7 @@ with U.single_threaded_session():
         for agent in trainers:
             loss = agent.update(trainers, train_step)
 
+        
 
         if len(episode_rewards) > arglist['num_episodes']:
             break
