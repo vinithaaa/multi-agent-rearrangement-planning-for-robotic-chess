@@ -66,8 +66,12 @@ with U.single_threaded_session():
     t_start = time.time()
     t_curr = time.time()
     current_episode = 0
+    best_actions = []
+    total_actions = []
+    best_reward = float('-inf')
     while True:
         action_n = [agent.action(obs) for agent, obs in zip(trainers, obs_n)]
+        total_actions.append(action_n)
         new_obs_n, rew_n, done_n = env.step(action_n)
         episode_step += 1
         done = all(done_n)
@@ -81,9 +85,16 @@ with U.single_threaded_session():
             agent_rewards[i][-1] += rew
 
         if done or terminal:
+            if done:
+                print("Completed task")
             obs_n = env.reset()
             episode_step = 0
             print(episode_rewards[-1])
+            if (episode_rewards[-1] > best_reward):
+                best_actions = total_actions
+                best_reward = episode_rewards[-1]
+
+            total_actions = []
             episode_rewards.append(0)
             for a in agent_rewards:
                 a.append(0)
@@ -106,4 +117,7 @@ with U.single_threaded_session():
 
         if len(episode_rewards) > arglist['num_episodes']:
             break
+
+
+    print(best_actions)
 
