@@ -130,7 +130,6 @@ with U.single_threaded_session():
             plt.cla()
             break
 
-
         train_step += 1
 
         loss = None
