@@ -107,25 +107,18 @@ with U.single_threaded_session():
                 a.append(0)
             agent_info.append([[]])
             current_episode += 1
-            if current_episode % 100 == 0:
+            if current_episode % 1 == 0:
                 t_curr = time.time() - t_curr
                 print("current episode:", current_episode, "time:", t_curr, "rewards", episode_rewards[len(episode_rewards) - 2],file=f)
-                plt.plot(episode_rewards)
-                plt.title('total rewards')
-                plt.ylabel('rewards')
-                plt.xlabel('episodes')
-                plt.savefig('rewardPlot' + str(current_episode) + '.png')
-                plt.cla()
-
-
-        if converges == 10:
-            plt.plot(episode_rewards)
-            plt.title('total rewards final')
-            plt.ylabel('rewards')
-            plt.xlabel('episodes')
-            plt.savefig('rewardPlot' + str(current_episode) + '.png')
-            plt.cla()
-            break
+                print("current episode:", current_episode, "time:", t_curr, "rewards", episode_rewards[len(episode_rewards) - 2])
+                
+                if current_episode % 100 == 0:
+                    plt.plot(episode_rewards)
+                    plt.title('total rewards')
+                    plt.ylabel('rewards')
+                    plt.xlabel('episodes')
+                    plt.savefig('rewardPlot' + str(current_episode) + '.png')
+                    plt.cla()
 
 
         train_step += 1
