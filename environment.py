@@ -39,7 +39,8 @@ class Environment():
         self.agents = self.createAgents()
         self.n = len(self.agents)
         actionBox = spaces.Box(low=0.0, high=10.0, shape=(2,), dtype=np.float32)
-        obsBox = spaces.Box(low=np.array([0.0,-0.5]), high=np.array([2.0,1.5]), dtype=np.float32)
+        #obsBox = spaces.Box(low=np.array([0.0,-0.5]), high=np.array([2.0,1.5]), dtype=np.float32)
+        obsBox = spaces.Box(low=np.array([-2.0,-2.0]), high=np.array([3.0,3.0]), dtype=np.float32)
         self.action_space = [actionBox] * self.n
         self.observation_space = [obsBox] * self.n
         pybullet.setRealTimeSimulation(1)
@@ -51,7 +52,8 @@ class Environment():
         obs1 = Agent('Obs1', [0.75,0.25,0], [0.75,0.25,0], [0,1,0,1])
         obs2 = Agent('Obs2', [0.75,0.75,0], [0.75,0.75,0], [0,1,0,1])
         obs3 = Agent('Obs3', [0.75,-0.25,0], [0.75,-0.25,0], [0,1,0,1])
-        target = Agent('Target', goal, [1.75,1,0], [1,0,0,1])
+        #target = Agent('Target', goal, [1.75,1,0], [1,0,0,1])
+        target = Agent('Target', goal, start, [1,0,0,1])
         return [player, obs1, obs2, obs3, target]
     
 
@@ -88,12 +90,13 @@ class Environment():
         
         #done = [self.doneGlobal()] * len(rewards)
 
+        print("Step Rewards: ", rewards)
         return observations, rewards, done
 
     def collision(self, firstAgent, secondAgent):
         firstXY = (firstAgent.getPos()[0][0], firstAgent.getPos()[0][1])
         secondXY = (secondAgent.getPos()[0][0], secondAgent.getPos()[0][1])
-        return math.sqrt(sum((px - qx) ** 2.0 for px, qx in zip(firstXY, secondXY))) <= 0.2
+        return math.sqrt(sum((px - qx) ** 2.0 for px, qx in zip(firstXY, secondXY))) <= 0.25
         #return math.dist([firstAgent.getPos()[0], firstAgent.getPos()[1]],[secondAgent.getPos[0], secondAgent.getPos[1]]) <= 0.25
         
 
