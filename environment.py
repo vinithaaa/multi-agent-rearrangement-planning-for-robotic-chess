@@ -90,7 +90,7 @@ class Environment():
         
         #done = [self.doneGlobal()] * len(rewards)
 
-        print("Step Rewards: ", rewards)
+        # print("Step Rewards: ", rewards)
         return observations, rewards, done
 
     def collision(self, firstAgent, secondAgent):

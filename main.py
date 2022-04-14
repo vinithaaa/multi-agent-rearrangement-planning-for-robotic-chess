@@ -105,9 +105,11 @@ with U.single_threaded_session():
                 a.append(0)
             agent_info.append([[]])
             current_episode += 1
+            print("current episode:", current_episode, "time:", t_curr, "rewards", episode_rewards[len(episode_rewards) - 2],file=f)
+                
             if current_episode % 100 == 0:
                 t_curr = time.time() - t_curr
-                print("current episode:", current_episode, "time:", t_curr, "rewards", episode_rewards[len(episode_rewards) - 2],file=f)
+                print("current episode:", current_episode, "time:", t_curr, "rewards", episode_rewards[len(episode_rewards) - 2])
                 plt.plot(episode_rewards)
                 plt.title('total rewards')
                 plt.ylabel('rewards')
