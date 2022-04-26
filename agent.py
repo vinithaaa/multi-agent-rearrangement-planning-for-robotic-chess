@@ -50,4 +50,5 @@ class Agent:
 
 
     def reset(self):
+        pybullet.resetBaseVelocity(self.obj, [0,0,0])
         pybullet.resetBasePositionAndOrientation(self.obj, [self.initial_pos[0], self.initial_pos[1], self.initial_pos[2]], pybullet.getQuaternionFromEuler([0,0,0]))

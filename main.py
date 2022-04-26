@@ -44,7 +44,7 @@ def mlp_model(input, num_outputs, scope, reuse=False, num_units=64, rnn_cell=Non
 model = mlp_model
 
 
-arglist = {'max_episode_len': 20, 'num_episodes': 60000, 'num_adversaries': 0, 'good_policy': 'maddpg', 'lr': 1e-2, 'gamma': 0.95, 'batch_size': 1024, 'num_units': 64, 'collision_penalty': 5, 'action_duration' : 5}
+arglist = {'max_episode_len': 50, 'num_episodes': 60000, 'num_adversaries': 0, 'good_policy': 'maddpg', 'lr': 1e-2, 'gamma': 0.95, 'batch_size': 1024, 'num_units': 64, 'collision_penalty': 5, 'action_duration' : 5}
 
 
 with U.single_threaded_session():  

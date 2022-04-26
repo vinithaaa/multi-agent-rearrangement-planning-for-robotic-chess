@@ -49,9 +49,11 @@ class Environment():
         goal = (1.25, 0.75, 0)
         start = (0.25, 0.25, 0)
         player = Agent('Player', start, goal, [0,0,1,1])
-        obs1 = Agent('Obs1', [0.75,0.25,0], [0.75,0.25,0], [0,1,0,1])
+        #obs1 = Agent('Obs1', [0.75,0.25,0], [0.75,0.25,0], [0,1,0,1])
+        obs1 = Agent('Obs1', [0.75,0.25,0], [0.75,-0.25,0], [0,1,0,1])
         obs2 = Agent('Obs2', [0.75,0.75,0], [0.75,0.75,0], [0,1,0,1])
-        obs3 = Agent('Obs3', [0.75,-0.25,0], [0.75,-0.25,0], [0,1,0,1])
+        obs3 = Agent('Obs3', [0.75,-0.25,0], [0.75,0.25,0], [0,1,0,1])
+        #obs3 = Agent('Obs3', [0.75,-0.25,0], [0.75,-0.25,0], [0,1,0,1])
         #target = Agent('Target', goal, [1.75,1,0], [1,0,0,1])
         target = Agent('Target', goal, start, [1,0,0,1])
         return [player, obs1, obs2, obs3, target]
@@ -72,6 +74,8 @@ class Environment():
             for i, agent in enumerate(self.agents):
                 agent.step(actions[i])
 
+        pybullet.stepSimulation()
+        time.sleep(1./240.)
         for i, agent in enumerate(self.agents):
             agent.stop()
 
@@ -96,7 +100,7 @@ class Environment():
     def collision(self, firstAgent, secondAgent):
         firstXY = (firstAgent.getPos()[0][0], firstAgent.getPos()[0][1])
         secondXY = (secondAgent.getPos()[0][0], secondAgent.getPos()[0][1])
-        return math.sqrt(sum((px - qx) ** 2.0 for px, qx in zip(firstXY, secondXY))) <= 0.5
+        return math.sqrt(sum((px - qx) ** 2.0 for px, qx in zip(firstXY, secondXY))) <= 0.25
         #return math.dist([firstAgent.getPos()[0], firstAgent.getPos()[1]],[secondAgent.getPos[0], secondAgent.getPos[1]]) <= 0.25
         
 
@@ -113,6 +117,12 @@ class Environment():
             agent.reset()
             obs.append(self.observe(agent))
         return obs
+        #obs = []
+        #pybullet.resetSimulation()
+        #self.agents = self.createAgents()
+        #for agent in self.agents:
+        #    obs.append(self.observe(agent))
+        #return obs
     
     
 
