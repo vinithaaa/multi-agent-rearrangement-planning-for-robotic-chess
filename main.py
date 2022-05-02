@@ -32,10 +32,10 @@ def mlp_model(input, num_outputs, scope, reuse=False, num_units=64, rnn_cell=Non
     #return model
     with tf.compat.v1.variable_scope(scope, reuse=reuse):
         out = input
-        out = layers.fully_connected(out, num_outputs=num_units, activation_fn=tf.nn.relu)
-        out = layers.fully_connected(out, num_outputs=num_units, activation_fn=tf.nn.relu)
-        out = layers.fully_connected(out, num_outputs=num_units, activation_fn=tf.nn.relu)
-        out = layers.fully_connected(out, num_outputs=num_units, activation_fn=tf.nn.relu)
+        out = layers.fully_connected(out, num_outputs=num_units, activation_fn=tf.nn.tanh)
+        out = layers.fully_connected(out, num_outputs=num_units, activation_fn=tf.nn.tanh)
+        out = layers.fully_connected(out, num_outputs=num_units, activation_fn=tf.nn.tanh)
+        out = layers.fully_connected(out, num_outputs=num_units, activation_fn=tf.nn.tanh)
         out = layers.fully_connected(out, num_outputs=num_outputs, activation_fn=None)
         return out
 
@@ -44,7 +44,7 @@ def mlp_model(input, num_outputs, scope, reuse=False, num_units=64, rnn_cell=Non
 model = mlp_model
 
 
-arglist = {'scenario_name': 'three_line', 'max_episode_len': 50, 'num_episodes': 5000, 'num_adversaries': 0, 'good_policy': 'maddpg', 'lr': 1e-2, 'gamma': 0.95, 'batch_size': 1024, 'num_units': 64, 'collision_penalty': 10, 'action_duration' : 5}
+arglist = {'scenario_name': 'two_line', 'max_episode_len': 10, 'num_episodes': 60000, 'num_adversaries': 0, 'good_policy': 'maddpg', 'lr': 1e-2, 'gamma': 0.95, 'batch_size': 1024, 'num_units': 64, 'collision_penalty': 20, 'action_duration' : 5}
 
 
 with U.single_threaded_session():  
