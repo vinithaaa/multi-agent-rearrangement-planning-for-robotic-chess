@@ -1,3 +1,6 @@
+# code found on https://github.com/openai/maddpg/blob/master/maddpg/trainer/replay_buffer.py
+# MADDPG implementation
+
 import collections
 import numpy as np
 import os

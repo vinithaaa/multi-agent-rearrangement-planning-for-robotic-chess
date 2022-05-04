@@ -1,4 +1,5 @@
-# copy pasted from https://github.com/openai/maddpg/blob/master/maddpg/trainer/maddpg.py
+# code from https://github.com/openai/maddpg/blob/master/maddpg/trainer/maddpg.py
+# MADDPG implementation
 
 import numpy as np
 import random
@@ -60,8 +61,7 @@ def p_train(make_obs_ph_n, act_space_n, p_index, p_func, q_func, optimizer, grad
 
         loss = pg_loss + p_reg * 1e-3
 
-        # So I see
-        # So p_func_vars is empty
+
         optimize_expr = U.minimize_and_clip(optimizer, loss, p_func_vars, grad_norm_clipping)
 
         # Create callable functions

@@ -58,6 +58,7 @@ with U.single_threaded_session():
 
     U.initialize()
 
+    # initialize all rewards and actions and their respective lists
     episode_rewards = [0.0]
     agent_rewards = [[0.0] for _ in range(env.n)]
     final_ep_rewards = []
@@ -90,6 +91,7 @@ with U.single_threaded_session():
             episode_rewards[-1] += rew
             agent_rewards[i][-1] += rew
 
+        # when task is completed, 
         if done or terminal:
             if done:
                 converges += 1
@@ -117,6 +119,7 @@ with U.single_threaded_session():
 
             episode_rewards.append(0)
 
+        # plot rewards
         if converges == 10:
             plt.plot(episode_rewards)
             plt.title(str(arglist['scenario_name']) + ' rewards')
@@ -134,7 +137,7 @@ with U.single_threaded_session():
         for agent in trainers:
             loss = agent.update(trainers, train_step)
         
-
+        # plot at the end of episodes
         if len(episode_rewards) > arglist['num_episodes']:
             plt.plot(episode_rewards)
             plt.title('total rewards')

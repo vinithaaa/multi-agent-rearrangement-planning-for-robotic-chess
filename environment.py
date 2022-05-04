@@ -46,6 +46,7 @@ class Environment():
         self.observation_space = [obsBox] * self.n
         pybullet.setRealTimeSimulation(1)
 
+    # create agents for each scenario 
     def createAgents(self):
         #first = Agent('Start', (0.25, 0.25, 0), (3.25, 0.25, 0), [0,0,1,1])
         first = Agent('Start', (0.25, 0.25, 0), (2.25, 0.25, 0), [0,0,1,1])
@@ -88,6 +89,7 @@ class Environment():
         return [player, obs1, obs2, obs3, obs4, obs5, obs6, target]
         """
 
+    # check to see if all of the agents are done with their task (getting to the target location)
     def doneGlobal(self):
         for agent in self.agents:
             if agent.done() == False:
@@ -95,7 +97,7 @@ class Environment():
         return True
 
 
-            
+    # have each agent take an action        
     def step(self, actions):
         for x in range(self.actionDuration):
             pybullet.stepSimulation()
@@ -108,10 +110,10 @@ class Environment():
         for i, agent in enumerate(self.agents):
             agent.stop()
 
-
         observations = []
         rewards = []
         done = []
+        # calculate rewards for each agent 
         for agent in self.agents:
             done.append(agent.done())
             observations.append(self.observe(agent))
@@ -126,6 +128,7 @@ class Environment():
         print("Step Rewards: ", rewards)
         return observations, rewards, done
 
+    # check to see if there's a collision between two agents
     def collision(self, firstAgent, secondAgent):
         firstXY = (firstAgent.getPos()[0][0], firstAgent.getPos()[0][1])
         secondXY = (secondAgent.getPos()[0][0], secondAgent.getPos()[0][1])
@@ -139,7 +142,7 @@ class Environment():
         return np.concatenate(posNP)
 
 
-
+    # reset environment
     def reset(self):
         obs = []
         for agent in self.agents:

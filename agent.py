@@ -14,17 +14,17 @@ class Agent:
         self.create()
 
         
-        
+    # create new waffle turtlebot robot in pybullet   
     def create(self):
         self.obj = pybullet.loadURDF('turtlebot3/turtlebot3_description/urdf/turtlebot3_waffle_pi.urdf.xacro', self.initial_pos, pybullet.getQuaternionFromEuler([0,0,0]))
         pybullet.changeVisualShape(self.obj, 0, rgbaColor=self.color)
         
-        
+    # get position of agent
     def getPos(self):
         self.current_pos = pybullet.getBasePositionAndOrientation(self.obj)
         return self.current_pos
     
-    
+    # take next action for individual robot
     def step(self, action):
         #Action given includes quaternion
         angle = math.atan(action[1]/action[0])
@@ -34,21 +34,22 @@ class Agent:
         pybullet.resetBasePositionAndOrientation(self.obj, [current_pos[0], current_pos[1], current_pos[2]], quarter)
         pybullet.resetBaseVelocity(self.obj, [action[0], action[1], 0])
         
-        
+    # make agent stop moving    
     def stop(self):
         pybullet.resetBaseVelocity(self.obj, [0,0,0])
         
-    
+    # calculate reward for each agent, takes into account distance from target position
     def reward(self):
         self.current_pos = self.getPos()[0]
         current = (self.current_pos[0], self.current_pos[1], self.current_pos[2])
         return -1 * math.sqrt(sum((px - qx) ** 2.0 for px, qx in zip(current, self.target_pos)))
         #return math.dist((self.current_pos[0], self.current_pos[1], self.current_pos[2]), self.target_pos)
     
+    # check to see if the agent is done with its task
     def done(self):
         return self.reward() >= -0.1
 
-
+    # reset agent's position and velocity
     def reset(self):
         pybullet.resetBaseVelocity(self.obj, [0,0,0])
         pybullet.resetBasePositionAndOrientation(self.obj, [self.initial_pos[0], self.initial_pos[1], self.initial_pos[2]], pybullet.getQuaternionFromEuler([0,0,0]))

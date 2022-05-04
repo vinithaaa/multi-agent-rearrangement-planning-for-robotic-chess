@@ -1,3 +1,6 @@
+# code from https://github.com/openai/maddpg/blob/master/maddpg/trainer/maddpg.py
+# MADDPG implementation
+
 #import tensorflow as tf
 import tensorflow.compat.v1 as tf
 tf.disable_v2_behavior()
