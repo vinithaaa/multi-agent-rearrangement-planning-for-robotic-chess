@@ -34,7 +34,8 @@ class Environment():
             aspect=1.0,
             nearVal=0.1,
             farVal=3.1)
-
+        
+        # initialize action space and agent
         width, height, rgbImg, depthImg, segImg = pybullet.getCameraImage(width = 224, height = 224, viewMatrix=viewMatrix, projectionMatrix = projectionMatrix)
         self.agents = self.createAgents()
         self.n = len(self.agents)
